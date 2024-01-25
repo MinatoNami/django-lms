@@ -4,10 +4,16 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 from .models import Course
-from .serializers import CourseSerializer
+from .serializers import CourseListSerializer, CourseSerializer
 
 @api_view(['GET'])
 def get_courses(request):
     courses = Course.objects.all()
-    serializer = CourseSerializer(courses, many=True)
+    serializer = CourseListSerializer(courses, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_course(request, slug):
+    course = Course.objects.get(slug=slug)
+    serializer = CourseSerializer(course)
     return Response(serializer.data)
