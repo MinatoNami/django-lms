@@ -3,8 +3,8 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
-from .models import Course, Lesson, Comment, Category
-from .serializers import CategoryListSerializer, CourseListSerializer, CourseSerializer, LessonListSerializer, CommentListSerializer
+from .models import Course, Lesson, Comment, Category, Quiz
+from .serializers import CategoryListSerializer, CourseListSerializer, CourseSerializer, LessonListSerializer, CommentListSerializer, QuizSerializer
 
 @api_view(['GET'])
 @authentication_classes([])
@@ -72,5 +72,13 @@ def add_comment(request, course_slug, lesson_slug):
 
     comment = Comment.objects.create(course=course, lesson=lesson, name=name, content=content, created_by=request.user)
     serializer = CommentListSerializer(comment)
+    
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_quiz(request, course_slug, lesson_slug):
+    lesson = Lesson.objects.get(slug=lesson_slug)
+    quiz = lesson.quizzes.first()
+    serializer = QuizSerializer(quiz)
     
     return Response(serializer.data)
