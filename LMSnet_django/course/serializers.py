@@ -1,16 +1,22 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from .models import Course, Lesson, Comment, Category, Quiz
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name')
 class CourseListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ('id', 'title', 'slug', 'short_description', 'get_image')
 
 class CourseSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(many=False)
     class Meta:
         model = Course
-        fields = ('id', 'title', 'slug', 'short_description', 'long_description')
+        fields = ('id', 'title', 'slug', 'short_description', 'long_description', 'created_by')
 
 class LessonListSerializer(serializers.ModelSerializer):
     class Meta:
