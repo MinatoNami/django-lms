@@ -4,6 +4,7 @@ This is part of the Learner Management System (LMS) tutorial, that was provided 
 that uses Vue for the frontend and Django for the backend.
 
 ![image](https://github.com/MinatoNami/vue-lms/assets/23627532/8f5bf74d-a09e-4b58-8ace-4a1246f544f2)
+![image](https://github.com/MinatoNami/django-lms/assets/23627532/6ec1c107-4359-42db-9196-ab3605f2d87c)
 
 This project consists of the following features:
 1. Ability for user to login and logout (token authentication done on the backend).
