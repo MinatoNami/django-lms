@@ -1,3 +1,5 @@
+from random import randint
+
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.utils.text import slugify
@@ -10,12 +12,17 @@ from .serializers import CategoryListSerializer, CourseListSerializer, CourseSer
 
 @api_view(['POST'])
 def create_course(request):
-    print(request.data)
+    
+    status = request.data.get('status')
+    if status == Course.PUBLISHED:
+        status = Course.DRAFT
+    
     course = Course.objects.create(
         title=request.data.get('title'),
-        slug=slugify(request.data.get('title')),
+        slug='%s-%s' % (slugify(request.data.get('title')),randint(1000,10000)),
         short_description=request.data.get('short_description'),
         long_description=request.data.get('long_description'),
+        status=status,
         created_by=request.user
     )
 
@@ -23,9 +30,20 @@ def create_course(request):
         course.categories.add(id)
 
     course.save()
-    print(course)
 
-    return Response({'yo':'yo'})
+    # Lessons
+    for lesson in request.data.get('lessons'):
+        temp_lesson = Lesson.objects.create(
+            course=course,
+            title=lesson.get('title'),
+            slug=slugify(lesson.get('title')),
+            short_description=lesson.get('short_description'),
+            long_description=lesson.get('long_description'),
+            status=status,
+        )
+
+
+    return Response({'course_id' : course.id})
 
 @api_view(['GET'])
 @authentication_classes([])
